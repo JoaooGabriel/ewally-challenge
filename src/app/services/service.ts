@@ -5,7 +5,6 @@ import { BadRequestError } from "./../../shared/helpers/response/error.response"
 export class Service {
   public async validateCodeNumber(codeNumber: string) {
     const splittedCodeNumber = codeNumber.split("");
-
     const {
       cnpjOrMfNumber,
       companyOrOrganIdentificationNumber,
@@ -17,6 +16,7 @@ export class Service {
       value,
       verifyingDigit,
     } = this.getScopesByCodeNumber(splittedCodeNumber);
+
     this.productIndentificationScope(productIndentificationNumber);
     const companyOrOrgan = this.segmentIdentificationScope(
       segmentIdentificationNumber
@@ -127,7 +127,9 @@ export class Service {
 
   private productIndentificationScope(productNumber: string) {
     if (productNumber !== "8") {
-      throw new BadRequestError("");
+      throw new BadRequestError(
+        "Código do boleto fora do padrão, número de Identificação do Produto inválido"
+      );
     }
   }
 
@@ -185,7 +187,9 @@ export class Service {
         identification = IdentificationValueOrReference._9;
         break;
       default:
-        throw new BadRequestError("");
+        throw new BadRequestError(
+          "Código do boleto fora do padrão, número de Identificador de Valor Efetivo ou Referência inválido"
+        );
     }
 
     return identification;
@@ -227,27 +231,73 @@ export class Service {
 
       if (index % 2 === 0) {
         result = result + 2 * digit;
+
+        return;
       }
 
       result = result + 1 * digit;
     });
 
     result = result % 10;
-    result = 10 - result;
+
+    if (result.toString() === "0") {
+      result = 0;
+    } else {
+      result = 10 - result;
+    }
 
     return result.toString();
   }
 
   private calculateByModule11(code: string) {
-    return "";
+    let result = 0;
+    let numberOfModuleList = [2, 3, 4, 5, 6, 7, 8, 9];
+    let numberModule: number;
+    const splittedCode = code.split("");
+    let position = splittedCode.length % numberOfModuleList.length;
+    numberModule = numberOfModuleList[position - 1];
+
+    splittedCode.forEach((c) => {
+      let digit = +c;
+
+      if (numberModule.toString() === "2") {
+        result = result + digit * numberModule;
+
+        numberModule = numberOfModuleList[numberOfModuleList.length - 1];
+
+        return;
+      }
+
+      result = result + digit * numberModule;
+      position = numberOfModuleList.findIndex(
+        (number) => number === numberModule
+      );
+      numberModule = numberOfModuleList[position - 1];
+    });
+
+    result = result % 11;
+
+    if (result.toString() === "0" || result.toString() === "1") {
+      result = 0;
+    }
+
+    if (result.toString() === "10") {
+      result = 1;
+    } else {
+      result = 11 - result;
+    }
+
+    return result.toString();
   }
 
   private verifyDigitEqualModuleCodeDigit(
     codeDigit: string,
     moduleDigit: string
   ) {
-    if (!codeDigit.includes(moduleDigit)) {
-      throw new BadRequestError("");
+    if (codeDigit !== moduleDigit) {
+      throw new BadRequestError(
+        "Código do boleto fora do padrão, número do Dígito Verificador inválido"
+      );
     }
   }
 }
