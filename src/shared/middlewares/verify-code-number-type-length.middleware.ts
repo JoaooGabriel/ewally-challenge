@@ -11,7 +11,7 @@ export function VerifyCodeNumberTypeAndLength(
 
   if (isNaN(changeCodeNumberTypeToNumber)) {
     throw new BadRequestError(
-      "Código do boleto inválido, deve conter apenas numeral"
+      "Código do boleto fora do padrão, deve conter apenas numeral"
     );
   }
 
@@ -20,7 +20,7 @@ export function VerifyCodeNumberTypeAndLength(
   if (splittedCodeNumber.length !== 46) {
     if (splittedCodeNumber.length !== 44) {
       throw new BadRequestError(
-      "Código do boleto inválido, tamanho diferente inválido"
+        "Código do boleto fora do padrão, tamanho diferente inválido"
       );
     }
   }
