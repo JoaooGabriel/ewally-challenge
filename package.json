@@ -1,0 +1,26 @@
+{
+  "name": "ewally-challenge",
+  "version": "1.0.0",
+  "main": "server.js",
+  "repository": "git@github.com:JoaooGabriel/ewally-challenge.git",
+  "author": "JoaooGabriel <caetanojoaogabriel@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "rm -rf dist && tsc",
+    "dev": "ts-node-dev --transpile-only src/server.ts",
+    "prestart": "npm run build",
+    "start": "node dist/server",
+    "watch": "tsc-watch"
+  },
+  "dependencies": {
+    "dotenv": "^15.0.0",
+    "express": "^4.17.2"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^8.2.0",
+    "@types/express": "^4.17.13",
+    "ts-node-dev": "^1.1.8",
+    "tsc-watch": "^4.6.0",
+    "typescript": "^4.5.5"
+  }
+}
