@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { global } from "./../../../src/shared/data/global.data";
 import { VerifyCodeNumberTypeAndLength } from "./../../../src/shared/middlewares/verify-code-number-type-length.middleware";
 
 describe("Verify code number type and length middleware test", () => {
@@ -10,7 +11,7 @@ describe("Verify code number type and length middleware test", () => {
   beforeEach(async () => {
     request = {};
     response = {};
-    codeNumber = "846100000005246100291102005460339004695895061080";
+    codeNumber = global.codeNumber.success;
   });
 
   it("should be type and length validation success", () => {
@@ -30,7 +31,7 @@ describe("Verify code number type and length middleware test", () => {
   });
 
   it("should be failed by type (string) different of number", () => {
-    codeNumber = "codeNumber123";
+    codeNumber = global.codeNumber.textContent;
     request = {
       params: {
         codeNumber,
