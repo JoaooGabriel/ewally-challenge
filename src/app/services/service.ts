@@ -229,12 +229,12 @@ export class Service {
     splittedCode.reverse().forEach((c, index) => {
       let digit = +c;
 
-      if (splittedCode.length === 48) { // mudar
+      if (splittedCode.length === 48) {
+        // mudar
         if (["0", "1", "2", "3"].includes(index.toString())) return;
       } else {
         if (["40"].includes(index.toString())) return;
       }
-
 
       if (aux % 2 === 0) {
         result = this.calcResultNumber(result, digit, 2);
@@ -267,19 +267,24 @@ export class Service {
     numberModule = numberOfModuleList[position - 1];
 
     splittedCode.forEach((c, index) => {
-      if (["3", "44", "45", "46", "47"].includes(index.toString())) return;
+      if (splittedCode.length === 48) {
+        // mudar
+        if (["0", "1", "2", "3"].includes(index.toString())) return;
+      } else {
+        if (["40"].includes(index.toString())) return;
+      }
 
       let digit = +c;
 
       if (numberModule.toString() === "2") {
-        result = result + digit * numberModule;
+        result = this.calcResultNumber(result, digit, numberModule);
 
         numberModule = numberOfModuleList[numberOfModuleList.length - 1];
 
         return;
       }
 
-      result = result + digit * numberModule;
+      result = this.calcResultNumber(result, digit, numberModule);
       position = numberOfModuleList.findIndex(
         (number) => number === numberModule
       );
