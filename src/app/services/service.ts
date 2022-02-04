@@ -3,7 +3,7 @@ import { SegmentIdentification } from "../../shared/enums/segment-identification
 import { BadRequestError } from "./../../shared/helpers/response/error.response";
 
 export class Service {
-  public async validateCodeNumber(codeNumber: string) {
+  public validateCodeNumber(codeNumber: string) {
     const splittedCodeNumber = codeNumber.split("");
     const {
       cnpjOrMfNumber,
@@ -161,7 +161,9 @@ export class Service {
         companyOrOrgan = SegmentIdentification._9;
         break;
       default:
-        throw new BadRequestError("");
+        throw new BadRequestError(
+          "Código do boleto fora do padrão, número de Identificação de Segmento inválido"
+        );
     }
 
     return companyOrOrgan;
@@ -231,7 +233,7 @@ export class Service {
 
       if (splittedCode.length === 48) {
         // mudar
-        if (["0", "1", "2", "3"].includes(index.toString())) return;
+        if (["0", "1", "2", "3", "44"].includes(index.toString())) return;
       } else {
         if (["40"].includes(index.toString())) return;
       }
@@ -263,13 +265,20 @@ export class Service {
     let numberOfModuleList = [2, 3, 4, 5, 6, 7, 8, 9];
     let numberModule: number;
     const splittedCode = code.split("");
-    let position = splittedCode.length % numberOfModuleList.length;
+    let position: number;
+
+    if (splittedCode.length === 48) {
+      position = (splittedCode.length - 4) % numberOfModuleList.length;
+    } else {
+      position = splittedCode.length % numberOfModuleList.length;
+    }
+
     numberModule = numberOfModuleList[position - 1];
 
     splittedCode.forEach((c, index) => {
       if (splittedCode.length === 48) {
         // mudar
-        if (["0", "1", "2", "3"].includes(index.toString())) return;
+        if (["0", "1", "2", "3", "44"].includes(index.toString())) return;
       } else {
         if (["40"].includes(index.toString())) return;
       }
