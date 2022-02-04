@@ -24,6 +24,7 @@ export default {
     "src/**",
     "!dist",
     "!*.josn",
+    "!src/shared/data/*.ts",
     "!src/shared/enums/*.ts",
     "!src/shared/helpers/**/*.ts",
     "!src/shared/interfaces/**/*.ts",
