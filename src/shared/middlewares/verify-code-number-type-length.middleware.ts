@@ -17,7 +17,7 @@ export function VerifyCodeNumberTypeAndLength(
 
   const splittedCodeNumber = codeNumber.split("");
 
-  if (splittedCodeNumber.length < 44 && splittedCodeNumber.length > 48) {
+  if (splittedCodeNumber.length < 44 || splittedCodeNumber.length > 48) {
     throw new BadRequestError(
       "Código do boleto fora do padrão, tamanho diferente inválido"
     );
