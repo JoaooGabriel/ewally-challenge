@@ -8,9 +8,8 @@ export class Service {
     const {
       cnpjOrMfNumber,
       companyOrOrganIdentificationNumber,
-      freeFieldNumber,
       freeFieldUseByCompanyOrOrganNumber,
-      identificationValueOrReferenceNumber,
+      identificationValueEffectiveOrReferenceNumber,
       productIndentificationNumber,
       segmentIdentificationNumber,
       value,
@@ -21,10 +20,11 @@ export class Service {
     const companyOrOrgan = this.segmentIdentificationScope(
       segmentIdentificationNumber
     );
-    const identification = this.identificationValueOrReferenceScope(
-      identificationValueOrReferenceNumber
+    const identification = this.identificationValueEffectiveOrReferenceScope(
+      identificationValueEffectiveOrReferenceNumber
     );
     this.verifyingDigitScope(verifyingDigit, identification, codeNumber);
+    const valueEffectiveOrReference = this.valueScope(value, identification);
 
     return {
       input: { codeNumber },
@@ -32,9 +32,8 @@ export class Service {
         codeInfo: {
           cnpjOrMfNumber,
           companyOrOrganIdentificationNumber,
-          freeFieldNumber,
           freeFieldUseByCompanyOrOrganNumber,
-          identificationValueOrReferenceNumber,
+          identificationValueEffectiveOrReferenceNumber,
           productIndentificationNumber,
           segmentIdentificationNumber,
           value,
@@ -43,6 +42,7 @@ export class Service {
         extras: {
           companyOrOrgan,
           identification,
+          valueEffectiveOrReference,
         },
       },
     };
@@ -51,13 +51,12 @@ export class Service {
   private getScopesByCodeNumber(codeNumberList: string[]) {
     let productIndentificationNumber = "",
       segmentIdentificationNumber = "",
-      identificationValueOrReferenceNumber = "",
+      identificationValueEffectiveOrReferenceNumber = "",
       verifyingDigit = "",
       value = "",
       companyOrOrganIdentificationNumber = "",
       freeFieldUseByCompanyOrOrganNumber = "",
-      cnpjOrMfNumber = "",
-      freeFieldNumber = "";
+      cnpjOrMfNumber = "";
 
     codeNumberList.forEach((number, index) => {
       if (index === 0) {
@@ -73,7 +72,7 @@ export class Service {
       }
 
       if (index === 2) {
-        identificationValueOrReferenceNumber += number;
+        identificationValueEffectiveOrReferenceNumber += number;
 
         return;
       }
@@ -90,38 +89,38 @@ export class Service {
         return;
       }
 
-      if (index >= 15 && index <= 18) {
-        companyOrOrganIdentificationNumber += number;
-        cnpjOrMfNumber += number;
+      if (index >= 15) {
+        if (identificationValueEffectiveOrReferenceNumber === "6") {
+          if (index <= 22) {
+            cnpjOrMfNumber += number;
 
-        return;
-      }
-
-      if (index >= 19 && index <= 43) {
-        freeFieldUseByCompanyOrOrganNumber += number;
-
-        if (index <= 22) {
-          cnpjOrMfNumber += number;
+            return;
+          }
         }
 
-        if (index >= 23) {
-          freeFieldNumber += number;
+        if (index <= 18) {
+          companyOrOrganIdentificationNumber += number;
+
+          return;
         }
 
-        return;
+        if (index >= 19 && index <= 43) {
+          freeFieldUseByCompanyOrOrganNumber += number;
+
+          return;
+        }
       }
     });
 
     return {
       productIndentificationNumber,
       segmentIdentificationNumber,
-      identificationValueOrReferenceNumber,
+      identificationValueEffectiveOrReferenceNumber,
       verifyingDigit,
       value,
       companyOrOrganIdentificationNumber,
       freeFieldUseByCompanyOrOrganNumber,
       cnpjOrMfNumber,
-      freeFieldNumber,
     };
   }
 
@@ -168,7 +167,7 @@ export class Service {
     return companyOrOrgan;
   }
 
-  private identificationValueOrReferenceScope(
+  private identificationValueEffectiveOrReferenceScope(
     identificationValueOrReferenceNumber: string
   ) {
     let identification: string;
@@ -224,18 +223,28 @@ export class Service {
 
   private calculateByModule10(code: string) {
     let result = 0;
+    let aux = 0;
     const splittedCode = code.split("");
 
-    splittedCode.forEach((c, index) => {
+    splittedCode.reverse().forEach((c, index) => {
       let digit = +c;
 
-      if (index % 2 === 0) {
-        result = result + 2 * digit;
+      if (splittedCode.length === 48) { // mudar
+        if (["0", "1", "2", "3"].includes(index.toString())) return;
+      } else {
+        if (["40"].includes(index.toString())) return;
+      }
+
+
+      if (aux % 2 === 0) {
+        result = this.calcResultNumber(result, digit, 2);
+        aux = 1;
 
         return;
       }
 
-      result = result + 1 * digit;
+      result = this.calcResultNumber(result, digit, 1);
+      aux = 0;
     });
 
     result = result % 10;
@@ -257,7 +266,9 @@ export class Service {
     let position = splittedCode.length % numberOfModuleList.length;
     numberModule = numberOfModuleList[position - 1];
 
-    splittedCode.forEach((c) => {
+    splittedCode.forEach((c, index) => {
+      if (["3", "44", "45", "46", "47"].includes(index.toString())) return;
+
       let digit = +c;
 
       if (numberModule.toString() === "2") {
@@ -290,6 +301,20 @@ export class Service {
     return result.toString();
   }
 
+  private calcResultNumber(result: number, digit: number, seq: number) {
+    let resultLength: string | string[];
+    let resultCalc: number;
+
+    resultCalc = seq * digit;
+    resultLength = resultCalc.toString().split("");
+    resultLength.forEach((r) => {
+      let resultDigit = +r;
+      result += resultDigit;
+    });
+
+    return result;
+  }
+
   private verifyDigitEqualModuleCodeDigit(
     codeDigit: string,
     moduleDigit: string
@@ -298,6 +323,16 @@ export class Service {
       throw new BadRequestError(
         "Código do boleto fora do padrão, número do Dígito Verificador inválido"
       );
+    }
+  }
+
+  private valueScope(value: string, identification: string) {
+    let valueBillet: string;
+
+    if (identification.toLowerCase().includes("moeda")) {
+      valueBillet = value;
+
+      return valueBillet;
     }
   }
 }
