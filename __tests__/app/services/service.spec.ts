@@ -7,47 +7,49 @@ describe("Services tests", () => {
 
   beforeAll(() => {
     service = new Service();
-    codeNumber = global.codeNumber.success;
   });
 
   describe("success", () => {
-    // it("should be get scopes code number with success", () => {
-    //   const response = service.validateCodeNumber(codeNumber);
+    it("should be get scopes code number with success", () => {
+      codeNumber = global.codeNumber.success;
+      const response = service.validateCodeNumber(codeNumber);
 
-    //   expect(response).toBe({
-    //     status: 200,
-    //     amount: "",
-    //     expirationDate: "",
-    //     barCode: "",
-    //   });
-    // });
+      expect(response).toStrictEqual({
+        amount: "504.82",
+        expirationDate: "2023-02-03",
+        barCode: codeNumber,
+      });
+    });
 
-    // it("should be get scopes code number without amount with success", () => {
-    //   const response = service.validateCodeNumber(codeNumber);
+    it("should be get scopes code number without amount with success", () => {
+      codeNumber = global.codeNumber.withOutValue;
+      const response = service.validateCodeNumber(codeNumber);
 
-    //   expect(response).toBe({
-    //     status: 200,
-    //     expirationDate: "",
-    //     barCode: "",
-    //   });
-    // });
+      delete response.amount;
 
-    // it("should be get scopes code number without without date with success", () => {
-    //   const response = service.validateCodeNumber(codeNumber);
+      expect(response).toStrictEqual({
+        expirationDate: "2023-02-03",
+        barCode: codeNumber,
+      });
+    });
 
-    //   expect(response).toBe({
-    //     status: 200,
-    //     amount: "",
-    //     barCode: "",
-    //   });
-    // });
+    it("should be get scopes code number without date with success", () => {
+      codeNumber = global.codeNumber.withOutDate;
+      const response = service.validateCodeNumber(codeNumber);
+
+      delete response.expirationDate;
+
+      expect(response).toStrictEqual({
+        amount: "504.82",
+        barCode: codeNumber,
+      });
+    });
 
     describe("segment identification", () => {
       // it("should be get scopes code number with segment identification one", () => {
       //   codeNumber = global.codeNumber.segmentIdentification.one;
       //   const response = service.validateCodeNumber(codeNumber);
       //   expect(response).toBe({
-      //     status: 200,
       //     amount: "",
       //     expirationDate: "",
       //     barCode: "",

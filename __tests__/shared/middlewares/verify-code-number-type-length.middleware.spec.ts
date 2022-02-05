@@ -11,13 +11,12 @@ describe("Verify code number type and length middleware test", () => {
   beforeEach(async () => {
     request = {};
     response = {};
-    codeNumber = global.codeNumber.success;
   });
 
   it("should be type and length validation success", () => {
     request = {
       params: {
-        codeNumber,
+        codeNumber: global.codeNumber.success,
       },
     };
 
@@ -31,10 +30,9 @@ describe("Verify code number type and length middleware test", () => {
   });
 
   it("should be failed by type (string) different of number", () => {
-    codeNumber = global.codeNumber.textContent;
     request = {
       params: {
-        codeNumber,
+        codeNumber: global.codeNumber.textContent,
       },
     };
 
@@ -52,10 +50,9 @@ describe("Verify code number type and length middleware test", () => {
   });
 
   it("should be failed by length smaller of 44", () => {
-    codeNumber = "123";
     request = {
       params: {
-        codeNumber,
+        codeNumber: global.codeNumber.smaller44,
       },
     };
 
@@ -73,10 +70,9 @@ describe("Verify code number type and length middleware test", () => {
   });
 
   it("should be failed by length larger of 48", () => {
-    codeNumber += "1";
     request = {
       params: {
-        codeNumber,
+        codeNumber: global.codeNumber.larger48,
       },
     };
 
