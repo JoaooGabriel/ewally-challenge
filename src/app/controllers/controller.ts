@@ -8,7 +8,7 @@ const service = new Service();
 export class Controller {
   public async getBillet(request: Request, response: Response) {
     try {
-      const billet = await service.validateCodeNumber(
+      const billet = service.validateCodeNumber(
         request.params.codeNumber
       );
 
