@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import { IdentificationValueOrReference } from "../../shared/enums/identification-value-reference.enums";
 import { SegmentIdentification } from "../../shared/enums/segment-identification.enums";
 import { BadRequestError } from "./../../shared/helpers/response/error.response";
@@ -17,34 +18,20 @@ export class Service {
     } = this.getScopesByCodeNumber(splittedCodeNumber);
 
     this.productIndentificationScope(productIndentificationNumber);
-    const companyOrOrgan = this.segmentIdentificationScope(
-      segmentIdentificationNumber
-    );
+    this.segmentIdentificationScope(segmentIdentificationNumber);
     const identification = this.identificationValueEffectiveOrReferenceScope(
       identificationValueEffectiveOrReferenceNumber
     );
     this.verifyingDigitScope(verifyingDigit, identification, codeNumber);
     const valueEffectiveOrReference = this.valueScope(value, identification);
+    const expirationDate = this.validateExistsDateInFreeField(
+      freeFieldUseByCompanyOrOrganNumber
+    );
 
     return {
-      input: { codeNumber },
-      output: {
-        codeInfo: {
-          cnpjOrMfNumber,
-          companyOrOrganIdentificationNumber,
-          freeFieldUseByCompanyOrOrganNumber,
-          identificationValueEffectiveOrReferenceNumber,
-          productIndentificationNumber,
-          segmentIdentificationNumber,
-          value,
-          verifyingDigit,
-        },
-        extras: {
-          companyOrOrgan,
-          identification,
-          valueEffectiveOrReference,
-        },
-      },
+      amount: valueEffectiveOrReference,
+      expirationDate,
+      barCode: codeNumber,
     };
   }
 
@@ -90,7 +77,7 @@ export class Service {
       }
 
       if (index >= 15) {
-        if (identificationValueEffectiveOrReferenceNumber === "6") {
+        if (segmentIdentificationNumber === "6") {
           if (index <= 22) {
             cnpjOrMfNumber += number;
 
@@ -341,12 +328,47 @@ export class Service {
   }
 
   private valueScope(value: string, identification: string) {
-    let valueBillet: string;
+    let valueBillet = "";
 
     if (identification.toLowerCase().includes("moeda")) {
-      valueBillet = value;
+      value = this.removeLeftZero(value);
+      const splittedValue = value.split("");
+      let aux = splittedValue.length - 2;
+
+      splittedValue.forEach((v, index) => {
+        if (index === aux) {
+          valueBillet += `.${v}`;
+
+          return;
+        }
+
+        valueBillet += v;
+      });
 
       return valueBillet;
     }
+  }
+
+  private removeLeftZero(value: string) {
+    const valueNumberType = +value;
+
+    return valueNumberType.toString();
+  }
+
+  private validateExistsDateInFreeField(freeField: string) {
+    const splittedFreeField = freeField.split("");
+    const year = `${splittedFreeField[0]}${splittedFreeField[1]}${splittedFreeField[2]}${splittedFreeField[3]}`;
+    const mounth = `${splittedFreeField[4]}${splittedFreeField[5]}`;
+    const day = `${splittedFreeField[6]}${splittedFreeField[7]}`;
+    const isDate = new Date(`${year}-${mounth}-${day}`);
+
+    if (
+      isDate.toString() === "Invalid Date" ||
+      isDate.getTime() < new Date().getTime()
+    ) {
+      return;
+    }
+
+    return format(isDate, "yyyy-MM-dd");
   }
 }
