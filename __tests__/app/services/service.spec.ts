@@ -46,15 +46,93 @@ describe("Services tests", () => {
     });
 
     describe("segment identification", () => {
-      // it("should be get scopes code number with segment identification one", () => {
-      //   codeNumber = global.codeNumber.segmentIdentification.one;
-      //   const response = service.validateCodeNumber(codeNumber);
-      //   expect(response).toBe({
-      //     amount: "",
-      //     expirationDate: "",
-      //     barCode: "",
-      //   });
-      // });
+      it("should be get scopes code number with segment identification one", () => {
+        codeNumber = global.codeNumber.segmentIdentification.one;
+        const response = service.validateCodeNumber(codeNumber);
+
+        expect(response).toStrictEqual({
+          amount: "504.82",
+          expirationDate: "2023-02-03",
+          barCode: codeNumber,
+        });
+      });
+
+      it("should be get scopes code number with segment identification two", () => {
+        codeNumber = global.codeNumber.segmentIdentification.two;
+        const response = service.validateCodeNumber(codeNumber);
+
+        expect(response).toStrictEqual({
+          amount: "504.82",
+          expirationDate: "2023-02-03",
+          barCode: codeNumber,
+        });
+      });
+
+      it("should be get scopes code number with segment identification three", () => {
+        codeNumber = global.codeNumber.segmentIdentification.three;
+        const response = service.validateCodeNumber(codeNumber);
+
+        expect(response).toStrictEqual({
+          amount: "504.82",
+          expirationDate: "2023-02-03",
+          barCode: codeNumber,
+        });
+      });
+
+      it("should be get scopes code number with segment identification four", () => {
+        codeNumber = global.codeNumber.segmentIdentification.four;
+        const response = service.validateCodeNumber(codeNumber);
+
+        expect(response).toStrictEqual({
+          amount: "504.82",
+          expirationDate: "2023-02-03",
+          barCode: codeNumber,
+        });
+      });
+
+      it("should be get scopes code number with segment identification five", () => {
+        codeNumber = global.codeNumber.segmentIdentification.five;
+        const response = service.validateCodeNumber(codeNumber);
+
+        expect(response).toStrictEqual({
+          amount: "504.82",
+          expirationDate: "2023-02-03",
+          barCode: codeNumber,
+        });
+      });
+
+      it("should be get scopes code number with segment identification six", () => {
+        codeNumber = global.codeNumber.segmentIdentification.six;
+        const response = service.validateCodeNumber(codeNumber);
+
+        expect(response).toStrictEqual({
+          amount: "504.82",
+          expirationDate: "2023-02-03",
+          barCode: codeNumber,
+        });
+      });
+
+      it("should be get scopes code number with segment identification seven", () => {
+        codeNumber = global.codeNumber.segmentIdentification.seven;
+        const response = service.validateCodeNumber(codeNumber);
+
+        expect(response).toStrictEqual({
+          amount: "504.82",
+          expirationDate: "2023-02-03",
+          barCode: codeNumber,
+        });
+      });
+
+      it("should be get scopes code number with segment identification nine", () => {
+        codeNumber = global.codeNumber.segmentIdentification.nine;
+        const response = service.validateCodeNumber(codeNumber);
+
+        expect(response).toStrictEqual({
+          amount: "504.82",
+          expirationDate: "2023-02-03",
+          barCode: codeNumber,
+        });
+      });
     });
   });
 
