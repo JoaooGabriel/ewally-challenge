@@ -134,6 +134,56 @@ describe("Services tests", () => {
         });
       });
     });
+
+    describe("identification value effective or reference", () => {
+      it("should be get scopes code number with identification value effective or reference six", () => {
+        codeNumber =
+          global.codeNumber.identificationValueEffectiveOrReference.six;
+        const response = service.validateCodeNumber(codeNumber);
+        delete response.amount; // pelo o Identificador de Valor ser do tipo Efetivo
+
+        expect(response).toStrictEqual({
+          expirationDate: "2023-02-03",
+          barCode: codeNumber,
+        });
+      });
+
+      it("should be get scopes code number with identification value effective or reference seven", () => {
+        codeNumber =
+          global.codeNumber.identificationValueEffectiveOrReference.seven;
+        const response = service.validateCodeNumber(codeNumber);
+
+        expect(response).toStrictEqual({
+          amount: "504.82",
+          expirationDate: "2023-02-03",
+          barCode: codeNumber,
+        });
+      });
+
+      it("should be get scopes code number with identification value effective or reference eight", () => {
+        codeNumber =
+          global.codeNumber.identificationValueEffectiveOrReference.eight;
+        const response = service.validateCodeNumber(codeNumber);
+        delete response.amount; // pelo o Identificador de Valor ser do tipo Efetivo
+
+        expect(response).toStrictEqual({
+          expirationDate: "2023-02-03",
+          barCode: codeNumber,
+        });
+      });
+
+      it("should be get scopes code number with identification value effective or reference nine", () => {
+        codeNumber =
+          global.codeNumber.identificationValueEffectiveOrReference.nine;
+        const response = service.validateCodeNumber(codeNumber);
+
+        expect(response).toStrictEqual({
+          amount: "504.82",
+          expirationDate: "2023-02-03",
+          barCode: codeNumber,
+        });
+      });
+    });
   });
 
   describe("error", () => {
@@ -161,7 +211,7 @@ describe("Services tests", () => {
 
     it("should be not get scopes code number by identification value effective or reference invalid", () => {
       codeNumber =
-        global.codeNumber.identificationValueEffectiveOrReferenceinvalid;
+        global.codeNumber.identificationValueEffectiveOrReference.invalid;
       function verifyFunction() {
         service.validateCodeNumber(codeNumber);
       }

@@ -265,9 +265,9 @@ export class Service {
     splittedCode.forEach((c, index) => {
       if (splittedCode.length === 48) {
         // mudar
-        if (["0", "1", "2", "3", "44"].includes(index.toString())) return;
+        if (["3", "44", "45", "46", "47"].includes(index.toString())) return;
       } else {
-        if (["40"].includes(index.toString())) return;
+        if (["3"].includes(index.toString())) return;
       }
 
       let digit = +c;
@@ -291,6 +291,8 @@ export class Service {
 
     if (result.toString() === "0" || result.toString() === "1") {
       result = 0;
+
+      return result.toString();
     }
 
     if (result.toString() === "10") {
