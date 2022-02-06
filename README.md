@@ -54,6 +54,11 @@ ou
 yarn start
 ```
 
+## Exemplo de código pra test
+```json
+codeNumber: 82700000005048200972023020454098290108605940
+```
+
 ## Stack Usada
 
 ### Backend
