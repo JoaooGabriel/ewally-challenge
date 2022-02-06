@@ -42,48 +42,4 @@ describe("Controllers tests", () => {
       });
     });
   });
-
-  // describe("error", () => {
-  //   it("should be return 400 internal server error", async () => {
-  //     request = {
-  //       params: {
-  //         codeNumber: "",
-  //       },
-  //     };
-  //     const mockBadRequest = new BadRequestError(
-  //       "Código do boleto fora do padrão"
-  //     );
-
-  //     jest.spyOn(controller, "getBillet").mockImplementationOnce(async () => {
-  //       throw mockBadRequest;
-  //     });
-
-  //     await controller.getBillet(request as Request, response as Response);
-
-  //     expect(response.status).toHaveBeenCalledWith(500);
-  //     expect(response.json).toHaveBeenCalledWith({
-  //       error: "Código do boleto fora do padrão",
-  //     });
-  //   });
-
-  //   it("should be return 500 internal server error", async () => {
-  //     request = {
-  //       params: {
-  //         codeNumber: "",
-  //       },
-  //     };
-  //     const mockInternalServerError = new Error("Erro no servidor");
-
-  //     jest.spyOn(controller, "getBillet").mockImplementationOnce(async () => {
-  //       throw mockInternalServerError;
-  //     });
-
-  //     await controller.getBillet(request as Request, response as Response);
-
-  //     expect(response.status).toHaveBeenCalledWith(500);
-  //     expect(response.json).toHaveBeenCalledWith({
-  //       error: "Erro no servidor",
-  //     });
-  //   });
-  // });
 });
